@@ -10,11 +10,15 @@ Aplicação feita originalmente pelo curso: [FastAPI do Zero!](https://fastapido
 **Shel:** zsh com tmux
 
 **Python:** python 3.11.9 com pyenv
-### Bibliotecas python
+### Bibliotecas Python
 * poetry
 * pipx
 * ignr
 
+### Bibliotecas Python - Desenvolvimento
+* ruff
+* pytest
+* taskipy
 
 **Versionador:** git e github-cli
 
