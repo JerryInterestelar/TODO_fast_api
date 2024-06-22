@@ -26,3 +26,18 @@ def test_create_user_deve_retornar_created_e_no_modelo_certo(client):
         'username': 'test_user',
         'email': 'test_user@example.com',
     }
+
+
+def test_read_users_deve_retornar_ok_e_uma_lista(client):
+    response = client.get('/users/')
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        'users': [
+            {
+                'id': 1,
+                'username': 'test_user',
+                'email': 'test_user@example.com',
+            }
+        ]
+    }
