@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from fastapi import FastAPI, HTTPException
 
-from fast_zero.schemas import UserDB, UserList, UserSchema, UserSchemaPublic
+from fast_zero.schemas import Message, UserDB, UserList, UserSchema, UserSchemaPublic
 
 app = FastAPI()
 
@@ -10,7 +10,7 @@ app = FastAPI()
 database = []
 
 
-@app.get('/')
+@app.get('/', response_model=Message)
 def read_root():
     return {'message': 'Olá mundo!'}
 
