@@ -72,6 +72,18 @@ def test_update_users_error_not_found(client):
     )
 
     assert response.status_code == HTTPStatus.NOT_FOUND
-    assert response.json() == {
-        'detail': 'User Not Found'
-    }
+    assert response.json() == {'detail': 'User Not Found'}
+
+
+def test_delete_users_deve_retornar_ok_e_usuario_deletado(client):
+    response = client.delete('/users/1')
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {'message': 'User deleted'}
+
+
+def test_delete_users_error_not_found(client):
+    response = client.delete('/users/15')
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {'detail': 'User Not Found'}
