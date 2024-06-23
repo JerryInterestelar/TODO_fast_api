@@ -34,3 +34,14 @@ def create_user(user: UserSchema):
     database.append(user_with_id)
 
     return user_with_id
+
+
+@app.put(
+    '/users/{user_id}',
+    response_model=UserSchemaPublic,
+)
+def update_user(user_id: int, user: UserSchema):
+    user_with_id = UserDB(id=user_id, **user.model_dump())
+    database[user_id - 1] = user_with_id
+
+    return user_with_id
