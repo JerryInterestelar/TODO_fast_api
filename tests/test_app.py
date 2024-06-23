@@ -41,3 +41,37 @@ def test_read_users_deve_retornar_ok_e_uma_lista(client):
             }
         ]
     }
+
+
+def test_update_users_deve_retornar_ok_e_atualizar_usuario(client):
+    response = client.put(
+        '/users/1',
+        json={
+            'username': 'test_user_updated',
+            'email': 'test_user_2@example.com',
+            'password': 'test_password_2',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        'id': 1,
+        'username': 'test_user_updated',
+        'email': 'test_user_2@example.com',
+    }
+
+
+def test_update_users_error_not_found(client):
+    response = client.put(
+        '/users/15',
+        json={
+            'username': 'test_user_updated',
+            'email': 'test_user_2@example.com',
+            'password': 'test_password_2',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {
+        'detail': 'User Not Found'
+    }
