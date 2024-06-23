@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from fast_zero.schemas import UserDB, UserList, UserSchema, UserSchemaPublic
 
@@ -41,6 +41,12 @@ def create_user(user: UserSchema):
     response_model=UserSchemaPublic,
 )
 def update_user(user_id: int, user: UserSchema):
+    if user_id < 1 or user_id > len(database):
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='User Not Found',
+        )
+
     user_with_id = UserDB(id=user_id, **user.model_dump())
     database[user_id - 1] = user_with_id
 
