@@ -29,6 +29,7 @@ def read_root():
 def read_users():
     return {'users': database}
 
+
 @app.get(
     '/users/{user_id}',
     status_code=HTTPStatus.OK,
@@ -42,6 +43,7 @@ def read_user(user_id: int):
         )
     user_with_id = database[user_id - 1]
     return user_with_id
+
 
 @app.post(
     '/users/',

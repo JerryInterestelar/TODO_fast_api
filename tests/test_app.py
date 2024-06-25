@@ -43,6 +43,24 @@ def test_read_users_deve_retornar_ok_e_uma_lista(client):
     }
 
 
+def test_read_user_deve_retornar_ok_e_um_usuario(client):
+    response = client.get('/users/1')
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        'id': 1,
+        'username': 'test_user',
+        'email': 'test_user@example.com',
+    }
+
+
+def test_read_user_error_not_found(client):
+    response = client.get('/users/15')
+
+    assert response.status_code == HTTPStatus.NOT_FOUND
+    assert response.json() == {'detail': 'User Not Found'}
+
+
 def test_update_users_deve_retornar_ok_e_atualizar_usuario(client):
     response = client.put(
         '/users/1',
