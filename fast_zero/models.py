@@ -18,3 +18,7 @@ class User:
         init=False,
         server_default=func.now(),  # sqlalchemy se vira para pegar a hora
     )
+    updated_at: Mapped[datetime] = mapped_column(
+        init=False,
+        onupdate=func.now(),
+    )
