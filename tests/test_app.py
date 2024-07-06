@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 from fast_zero.schemas import UserSchemaPublic
+from fast_zero.security import create_access_token
 
 
 def test_root_deve_retornar_ok_e_ola_mundo(client):
@@ -114,18 +115,65 @@ def test_update_users_deve_retornar_ok_e_atualizar_usuario(
     }
 
 
-# def test_update_users_error_not_found(client, user):
-#     response = client.put(
-#         '/users/15',
-#         json={
-#             'username': 'test_user_updated',
-#             'email': 'test_user_2@example.com',
-#             'password': 'test_password_2',
-#         },
-#     )
-#
-#     assert response.status_code == HTTPStatus.NOT_FOUND
-#     assert response.json() == {'detail': 'User Not Found'}
+def test_update_users_error_atualizar_outro_user(
+    client,
+    user,
+    token,
+):
+    response = client.put(
+        '/users/5',
+        headers={'Authorization': f'Bearer {token}'},
+        json={
+            'username': 'test_user_updated',
+            'email': 'test_user_2@example.com',
+            'password': 'test_password_2',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.BAD_REQUEST
+    assert response.json() == {'detail': 'Not enough permissions'}
+
+
+def test_update_users_error_token_com_user_nulo(
+    client,
+    user,
+    token,
+):
+    wrong_token = create_access_token(data={'sub': ''})
+
+    response = client.put(
+        '/users/1',
+        headers={'Authorization': f'Bearer {wrong_token}'},
+        json={
+            'username': 'test_user_updated',
+            'email': 'test_user_2@example.com',
+            'password': 'test_password_2',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert response.json() == {'detail': 'Could not validate credentials'}
+
+
+def test_update_users_error_token_com_user_invalido(
+    client,
+    user,
+    token,
+):
+    wrong_token = create_access_token(data={'sub': 'user_invalid'})
+
+    response = client.put(
+        '/users/1',
+        headers={'Authorization': f'Bearer {wrong_token}'},
+        json={
+            'username': 'test_user_updated',
+            'email': 'test_user_2@example.com',
+            'password': 'test_password_2',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert response.json() == {'detail': 'Could not validate credentials'}
 
 
 def test_delete_users_deve_retornar_ok_e_usuario_deletado(
@@ -142,11 +190,18 @@ def test_delete_users_deve_retornar_ok_e_usuario_deletado(
     assert response.json() == {'message': 'User deleted'}
 
 
-# def test_delete_users_error_not_found(client, user):
-#     response = client.delete('/users/15')
-#
-#     assert response.status_code == HTTPStatus.NOT_FOUND
-#     assert response.json() == {'detail': 'User Not Found'}
+def test_delete_users_error_deletar_outro_user(
+    client,
+    user,
+    token,
+):
+    response = client.delete(
+        '/users/5',
+        headers={'Authorization': f'Bearer {token}'},
+    )
+
+    assert response.status_code == HTTPStatus.BAD_REQUEST
+    assert response.json() == {'detail': 'Not enough permissions'}
 
 
 def test_get_token(client, user):
@@ -163,3 +218,29 @@ def test_get_token(client, user):
     assert response.status_code == HTTPStatus.OK
     assert token['token_type'] == 'bearer'
     assert 'access_token' in token
+
+
+def test_get_token_error_username_errado(client, user):
+    response = client.post(
+        '/token',
+        data={
+            'username': 'username_errado',
+            'password': user.clean_password,
+        },
+    )
+
+    assert response.status_code == HTTPStatus.BAD_REQUEST
+    assert response.json() == {'detail': 'Incorrect Username or Password'}
+
+
+def test_get_token_error_senha_errada(client, user):
+    response = client.post(
+        '/token',
+        data={
+            'username': user.username,
+            'password': 'Senha_errada',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.BAD_REQUEST
+    assert response.json() == {'detail': 'Incorrect Username or Password'}
