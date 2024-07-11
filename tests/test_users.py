@@ -26,7 +26,7 @@ def test_create_user_username_duplicado(client, user):
     response = client.post(
         '/users/',
         json={
-            'username': 'test_user',  # Mesmo username
+            'username': f'{user.username}',  # Mesmo username
             'email': 'test_user_02@example.com',
             'password': 'test_password',
         },
@@ -41,7 +41,7 @@ def test_create_user_email_duplicado(client, user):
         '/users/',
         json={
             'username': 'test_user_02',
-            'email': 'test_user@example.com',  # Mesmo email
+            'email': f'{user.email}',  # Mesmo email
             'password': 'test_password',
         },
     )
@@ -66,13 +66,13 @@ def test_read_users_com_usuarios(client, user):
 
 
 def test_read_user_deve_retornar_ok_e_um_usuario(client, user):
-    response = client.get('/users/1')
+    response = client.get(f'/users/{user.id}')
 
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
-        'id': 1,
-        'username': 'test_user',
-        'email': 'test_user@example.com',
+        'id': user.id,
+        'username': f'{user.username}',
+        'email': f'{user.email}',
     }
 
 
@@ -109,10 +109,11 @@ def test_update_users_deve_retornar_ok_e_atualizar_usuario(
 def test_update_users_error_atualizar_outro_user(
     client,
     user,
+    other_user,
     token,
 ):
     response = client.put(
-        '/users/5',
+        f'/users/{other_user.id}',
         headers={'Authorization': f'Bearer {token}'},
         json={
             'username': 'test_user_updated',
@@ -184,10 +185,11 @@ def test_delete_users_deve_retornar_ok_e_usuario_deletado(
 def test_delete_users_error_deletar_outro_user(
     client,
     user,
+    other_user,
     token,
 ):
     response = client.delete(
-        '/users/5',
+        f'/users/{other_user.id}',
         headers={'Authorization': f'Bearer {token}'},
     )
 
