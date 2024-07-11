@@ -24,6 +24,8 @@ ruff = "^0.4.10"
 httpx = "^0.27.0"
 
 # ruff
+factory-boy = "^3.3.0"
+freezegun = "^1.5.1"
 [tool.ruff]
 line-length = 79
 extend-exclude = ['migrations']
