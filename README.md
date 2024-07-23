@@ -22,4 +22,13 @@ Aplicação feita originalmente pelo curso: [FastAPI do Zero!](https://fastapido
 
 **Versionador:** git e github-cli
 
-**Container:** docker e podman
+**Container:** docker
+
+### Execução
+instalar as dependências e entrar no Shell
+
+    poetry install
+    poetry shell
+Subir a migração com alembic
+
+    alembic upgrade head
