@@ -44,6 +44,10 @@ class Todo:
     title: Mapped[str]
     description: Mapped[str]
     state: Mapped[TodoState]
+    created_at: Mapped[datetime] = mapped_column(
+        init=False,
+        server_default=func.now(),  # sqlalchemy se vira para pegar a hora
+    )
 
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
 

@@ -26,12 +26,11 @@ def test_create_todo(client, token):
         },
     )
 
-    assert response.json() == {
-        'id': 1,
-        'title': 'Test todo',
-        'description': 'Test todo description',
-        'state': 'draft',
-    }
+    assert response.json()['id'] == 1
+    assert response.json()['title'] == 'Test todo'
+    assert response.json()['description'] == 'Test todo description'
+    assert response.json()['state'] == 'draft'
+    assert response.json()['created_at']
 
 
 def teste_list_todos_deve_retornar_5_todos(client, token, user, session):
