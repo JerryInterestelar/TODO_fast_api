@@ -28,7 +28,7 @@ def create_todo(
     user: CurrentUser,
     session: Session,
 ):
-    db_todo = Todo(
+    db_todo: Todo = Todo(
         title=todo.title,
         description=todo.description,
         state=todo.state,
@@ -61,7 +61,7 @@ def list_todos(  # noqa
         query = query.filter(Todo.description.contains(description))
 
     if state:
-        query = query.filter(Todo.state.contains(state))
+        query = query.filter(Todo.state == state)
 
     todos = session.scalars(query.offset(offset).limit(limit)).all()
 
