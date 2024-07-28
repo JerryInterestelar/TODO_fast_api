@@ -7,7 +7,7 @@ Aplicação feita originalmente pelo curso: [FastAPI do Zero!](https://fastapido
 
 **Terminal:** Kitty
 
-**Shel:** zsh com tmux
+**Shell:** zsh com tmux
 
 **Python:** python 3.11.9 com pyenv
 ### Bibliotecas Python
